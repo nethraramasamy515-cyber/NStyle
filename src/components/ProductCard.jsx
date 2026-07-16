@@ -1,3 +1,10 @@
+import { Link } from "react-router-dom";
+
+<Link to={`/product/${product.id}`}>
+  {/* Card content */}
+</Link>
+
+
 function ProductCard({ product }) {
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
