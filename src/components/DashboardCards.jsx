@@ -11,7 +11,7 @@ function DashboardCards() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/dashboard")
+      .get("https://nstyle-backend.onrender.com/api/dashboard")
       .then((res) => {
         setData(res.data);
       })
