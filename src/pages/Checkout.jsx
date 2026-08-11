@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +21,8 @@ function Checkout() {
   const [discount, setDiscount] = useState(0);
 
   // Payment
-  const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
+  const [paymentMethod, setPaymentMethod] =
+    useState("Cash on Delivery");
 
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -48,7 +50,13 @@ function Checkout() {
       return;
     }
 
-    if (!fullName || !email || !address || !city || !pinCode) {
+    if (
+      !fullName ||
+      !email ||
+      !address ||
+      !city ||
+      !pinCode
+    ) {
       toast.error("Please fill all shipping details");
       return;
     }
@@ -63,17 +71,20 @@ function Checkout() {
 
     try {
       for (const item of cart) {
-        await axios.post("http://localhost:5000/api/orders", {
-          user_name: fullName,
-          email: email,
-          product_name: item.name,
-          quantity: item.quantity,
-          total_price: item.price * item.quantity,
-          payment_method: paymentMethod,
-          address,
-          city,
-          pinCode,
-        });
+        await axios.post(
+          "https://nstyle-backend.onrender.com/api/orders",
+          {
+            user_name: fullName,
+            email: email,
+            product_name: item.name,
+            quantity: item.quantity,
+            total_price: item.price * item.quantity,
+            payment_method: paymentMethod,
+            address,
+            city,
+            pinCode,
+          }
+        );
       }
 
       toast.success("🎉 Order Placed Successfully!");
@@ -96,6 +107,7 @@ function Checkout() {
       <div className="grid md:grid-cols-2 gap-10">
 
         {/* Shipping Address */}
+
         <div className="bg-white shadow-lg rounded-2xl p-6">
 
           <h2 className="text-2xl font-semibold mb-6">
@@ -106,7 +118,9 @@ function Checkout() {
             type="text"
             placeholder="Full Name"
             value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
+            onChange={(e) =>
+              setFullName(e.target.value)
+            }
             className="w-full border rounded-lg p-3 mb-4"
           />
 
@@ -114,7 +128,9 @@ function Checkout() {
             type="email"
             placeholder="Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
             className="w-full border rounded-lg p-3 mb-4"
           />
 
@@ -122,7 +138,9 @@ function Checkout() {
             type="text"
             placeholder="Address"
             value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            onChange={(e) =>
+              setAddress(e.target.value)
+            }
             className="w-full border rounded-lg p-3 mb-4"
           />
 
@@ -130,7 +148,9 @@ function Checkout() {
             type="text"
             placeholder="City"
             value={city}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={(e) =>
+              setCity(e.target.value)
+            }
             className="w-full border rounded-lg p-3 mb-4"
           />
 
@@ -138,13 +158,16 @@ function Checkout() {
             type="text"
             placeholder="PIN Code"
             value={pinCode}
-            onChange={(e) => setPinCode(e.target.value)}
+            onChange={(e) =>
+              setPinCode(e.target.value)
+            }
             className="w-full border rounded-lg p-3"
           />
 
         </div>
 
         {/* Order Summary */}
+
         <div className="bg-white shadow-lg rounded-2xl p-6">
 
           <h2 className="text-2xl font-semibold mb-6">
@@ -163,7 +186,9 @@ function Checkout() {
                 key={item.id}
                 className="flex justify-between border-b py-3"
               >
+
                 <div>
+
                   <h3 className="font-semibold">
                     {item.name}
                   </h3>
@@ -171,11 +196,13 @@ function Checkout() {
                   <p className="text-gray-500">
                     Qty : {item.quantity}
                   </p>
+
                 </div>
 
                 <span>
                   ₹{item.price * item.quantity}
                 </span>
+
               </div>
             ))
           )}
@@ -194,7 +221,9 @@ function Checkout() {
                 type="text"
                 placeholder="Enter Coupon"
                 value={coupon}
-                onChange={(e) => setCoupon(e.target.value)}
+                onChange={(e) =>
+                  setCoupon(e.target.value)
+                }
                 className="flex-1 border rounded-lg p-3"
               />
 
@@ -239,12 +268,16 @@ function Checkout() {
 
           <select
             value={paymentMethod}
-            onChange={(e) => setPaymentMethod(e.target.value)}
+            onChange={(e) =>
+              setPaymentMethod(e.target.value)
+            }
             className="w-full border rounded-lg p-3 mt-6"
           >
+
             <option>Cash on Delivery</option>
             <option>UPI</option>
             <option>Credit / Debit Card</option>
+
           </select>
 
           <button
