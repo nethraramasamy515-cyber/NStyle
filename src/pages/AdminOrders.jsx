@@ -1,7 +1,8 @@
 
-
 import { useEffect, useState } from "react";
 import axios from "axios";
+
+const API_URL = "https://nstyle-backend.onrender.com";
 
 function AdminOrders() {
   const [orders, setOrders] = useState([]);
@@ -17,9 +18,7 @@ function AdminOrders() {
     try {
       setLoading(true);
 
-      const res = await axios.get(
-        "http://localhost:5000/api/orders"
-      );
+      const res = await axios.get(`${API_URL}/api/orders`);
 
       setOrders(res.data);
     } catch (err) {
@@ -34,12 +33,9 @@ function AdminOrders() {
 
   const updateStatus = async (id, status) => {
     try {
-      await axios.put(
-        `http://localhost:5000/api/orders/${id}`,
-        {
-          status: status,
-        }
-      );
+      await axios.put(`${API_URL}/api/orders/${id}`, {
+        status: status,
+      });
 
       alert("✅ Order status updated!");
 
@@ -60,9 +56,7 @@ function AdminOrders() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(
-        `http://localhost:5000/api/orders/${id}`
-      );
+      await axios.delete(`${API_URL}/api/orders/${id}`);
 
       alert("🗑️ Order deleted successfully!");
 
@@ -87,13 +81,11 @@ function AdminOrders() {
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-6">
-
       <div className="max-w-7xl mx-auto">
 
         {/* HEADER */}
 
         <div className="flex justify-between items-center mb-8">
-
           <div>
             <h1 className="text-4xl font-bold">
               📦 Admin Orders
@@ -110,13 +102,11 @@ function AdminOrders() {
           >
             🔄 Refresh
           </button>
-
         </div>
 
         {/* ORDER COUNT */}
 
         <div className="bg-white rounded-2xl shadow-lg p-5 mb-6">
-
           <p className="text-gray-500">
             Total Orders
           </p>
@@ -124,19 +114,15 @@ function AdminOrders() {
           <p className="text-3xl font-bold">
             {orders.length}
           </p>
-
         </div>
 
         {/* TABLE */}
 
         <div className="overflow-x-auto bg-white rounded-2xl shadow-xl">
-
           <table className="w-full">
 
             <thead className="bg-black text-white">
-
               <tr>
-
                 <th className="p-4">ID</th>
                 <th>Customer</th>
                 <th>Email</th>
@@ -147,9 +133,7 @@ function AdminOrders() {
                 <th>Status</th>
                 <th>Date</th>
                 <th>Action</th>
-
               </tr>
-
             </thead>
 
             <tbody>
@@ -157,14 +141,12 @@ function AdminOrders() {
               {orders.length === 0 ? (
 
                 <tr>
-
                   <td
                     colSpan="10"
                     className="text-center py-10 text-gray-500"
                   >
                     No orders found.
                   </td>
-
                 </tr>
 
               ) : (
@@ -207,7 +189,6 @@ function AdminOrders() {
                     {/* STATUS */}
 
                     <td>
-
                       <select
                         value={order.status || "Pending"}
                         onChange={(e) =>
@@ -244,7 +225,6 @@ function AdminOrders() {
                         </option>
 
                       </select>
-
                     </td>
 
                     {/* DATE */}
@@ -260,7 +240,6 @@ function AdminOrders() {
                     {/* DELETE */}
 
                     <td>
-
                       <button
                         onClick={() =>
                           deleteOrder(order.id)
@@ -269,7 +248,6 @@ function AdminOrders() {
                       >
                         🗑️
                       </button>
-
                     </td>
 
                   </tr>
@@ -281,14 +259,11 @@ function AdminOrders() {
             </tbody>
 
           </table>
-
         </div>
 
       </div>
-
     </div>
   );
 }
 
 export default AdminOrders;
-
