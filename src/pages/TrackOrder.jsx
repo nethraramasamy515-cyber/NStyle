@@ -3,10 +3,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 
+const API_URL = "https://nstyle-backend.onrender.com";
+
 function TrackOrder() {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Change this ID when you want to track another order
   const orderId = 15;
 
   const steps = [
@@ -24,7 +27,7 @@ function TrackOrder() {
   const loadOrder = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/orders/${orderId}`
+        `${API_URL}/api/orders/${orderId}`
       );
 
       setOrder(response.data);
@@ -71,7 +74,6 @@ function TrackOrder() {
       <Navbar />
 
       <div className="min-h-screen bg-gray-100 py-10 px-6">
-
         <div className="max-w-4xl mx-auto">
 
           <h1 className="text-4xl font-bold text-purple-700 mb-8">
@@ -93,7 +95,6 @@ function TrackOrder() {
             </p>
 
             <div className="bg-gray-100 rounded-xl p-4 mb-8">
-
               <p className="text-gray-500">
                 Current Status
               </p>
@@ -101,18 +102,15 @@ function TrackOrder() {
               <p className="text-2xl font-bold text-green-600">
                 {order.status}
               </p>
-
             </div>
 
             <div className="space-y-6">
 
               {steps.map((step, index) => (
-
                 <div
                   key={step}
                   className="flex items-center gap-4"
                 >
-
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
                       index <= currentStep
@@ -134,17 +132,13 @@ function TrackOrder() {
                   >
                     {step}
                   </h3>
-
                 </div>
-
               ))}
 
             </div>
 
           </div>
-
         </div>
-
       </div>
     </>
   );
