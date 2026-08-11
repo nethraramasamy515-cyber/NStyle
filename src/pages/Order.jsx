@@ -3,9 +3,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 
+const API_URL = "https://nstyle-backend.onrender.com";
+
 function Order() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // ================= LOAD ORDERS =================
 
   useEffect(() => {
     loadOrders();
@@ -13,15 +17,18 @@ function Order() {
 
   const loadOrders = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
+      const user = JSON.parse(
+        localStorage.getItem("user")
+      );
 
       if (!user) {
         setOrders([]);
+        setLoading(false);
         return;
       }
 
       const res = await axios.get(
-        "http://localhost:5000/api/orders"
+        `${API_URL}/api/orders`
       );
 
       // Show only logged-in user's orders
@@ -30,12 +37,15 @@ function Order() {
       );
 
       setOrders(userOrders);
+
     } catch (err) {
       console.log("Order Error:", err);
     } finally {
       setLoading(false);
     }
   };
+
+  // ================= UI =================
 
   return (
     <>
@@ -49,13 +59,22 @@ function Order() {
             📦 My Orders
           </h1>
 
+          {/* LOADING */}
+
           {loading ? (
+
             <div className="bg-white rounded-2xl shadow-lg p-10 text-center">
+
               <p className="text-xl">
                 Loading orders...
               </p>
+
             </div>
+
           ) : orders.length === 0 ? (
+
+            /* NO ORDERS */
+
             <div className="bg-white rounded-2xl shadow-lg p-10 text-center">
 
               <div className="text-6xl mb-4">
@@ -71,7 +90,11 @@ function Order() {
               </p>
 
             </div>
+
           ) : (
+
+            /* ORDERS */
+
             <div className="space-y-6">
 
               {orders.map((order) => (
@@ -82,6 +105,8 @@ function Order() {
                 >
 
                   <div className="flex flex-col md:flex-row md:justify-between gap-4">
+
+                    {/* ORDER DETAILS */}
 
                     <div>
 
@@ -103,19 +128,26 @@ function Order() {
 
                     </div>
 
+                    {/* PRICE + STATUS */}
+
                     <div className="text-left md:text-right">
 
                       <p className="text-2xl font-bold">
-                        ₹{order.total_price}
+                        ₹
+                        {Number(
+                          order.total_price
+                        ).toFixed(2)}
                       </p>
 
                       <span className="inline-block mt-3 bg-green-100 text-green-700 px-4 py-2 rounded-full font-semibold">
-                        {order.status}
+                        {order.status || "Pending"}
                       </span>
 
                     </div>
 
                   </div>
+
+                  {/* ORDER DATE */}
 
                   <div className="mt-6 border-t pt-4">
 
@@ -124,9 +156,11 @@ function Order() {
                     </p>
 
                     <p className="font-semibold">
-                      {new Date(
-                        order.order_date
-                      ).toLocaleString()}
+                      {order.order_date
+                        ? new Date(
+                            order.order_date
+                          ).toLocaleString()
+                        : "-"}
                     </p>
 
                   </div>
@@ -136,6 +170,7 @@ function Order() {
               ))}
 
             </div>
+
           )}
 
         </div>
@@ -146,4 +181,3 @@ function Order() {
 }
 
 export default Order;
-
