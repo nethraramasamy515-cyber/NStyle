@@ -22,7 +22,7 @@ function AddProduct() {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/products",
+        "https://nstyle-backend.onrender.com/api/products",
         product
       );
 
