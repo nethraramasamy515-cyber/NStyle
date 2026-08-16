@@ -71,7 +71,7 @@ function Footer() {
           <div className="space-y-3 text-gray-400">
 
             <p>
-              📧 nethraramasamy515@gmail.com
+              📧 nethrait15@gmail.com
             </p>
 
             <p>

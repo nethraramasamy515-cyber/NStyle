@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 
@@ -89,6 +90,14 @@ function Order() {
                 You haven't placed any orders yet.
               </p>
 
+              <Link to="/shop">
+
+                <button className="mt-6 bg-purple-700 text-white px-6 py-3 rounded-xl hover:bg-purple-800 transition">
+                  🛍 Start Shopping
+                </button>
+
+              </Link>
+
             </div>
 
           ) : (
@@ -104,7 +113,7 @@ function Order() {
                   className="bg-white rounded-2xl shadow-lg p-6"
                 >
 
-                  <div className="flex flex-col md:flex-row md:justify-between gap-4">
+                  <div className="flex flex-col md:flex-row md:justify-between gap-6">
 
                     {/* ORDER DETAILS */}
 
@@ -162,6 +171,22 @@ function Order() {
                           ).toLocaleString()
                         : "-"}
                     </p>
+
+                  </div>
+
+                  {/* TRACK ORDER */}
+
+                  <div className="mt-6">
+
+                    <Link
+                      to={`/track-order/${order.id}`}
+                    >
+
+                      <button className="w-full bg-purple-700 text-white py-3 rounded-xl hover:bg-purple-800 transition font-semibold">
+                        🚚 Track Order
+                      </button>
+
+                    </Link>
 
                   </div>
 

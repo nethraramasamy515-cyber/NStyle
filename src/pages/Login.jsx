@@ -1,13 +1,12 @@
 
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
-
-const API_URL = "https://nstyle-backend.onrender.com";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,62 +14,33 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!email.trim() || !password.trim()) {
       toast.error("Please fill all fields");
       return;
     }
 
-    try {
-      const res = await axios.post(
-        `${API_URL}/api/users/login`,
-        {
-          email,
-          password,
-        }
-      );
+    const result = await login(email, password);
 
-      // Save logged-in user
-      localStorage.setItem(
-        "user",
-        JSON.stringify(res.data.user)
-      );
-
-      toast.success(
-        res.data.message || "Login successful!"
-      );
+    if (result.success) {
+      toast.success(result.message || "Login successful!");
 
       setTimeout(() => {
         navigate("/");
       }, 1000);
-
-    } catch (err) {
-      console.log(err);
-
-      if (err.response) {
-        toast.error(
-          err.response.data.message || "Login failed"
-        );
-      } else {
-        toast.error("Server Error");
-      }
+    } else {
+      toast.error(result.message || "Login failed");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
 
         <h1 className="text-3xl font-bold text-center mb-6">
           Login
         </h1>
 
-        <form
-          onSubmit={handleLogin}
-          className="space-y-4"
-        >
-
-          {/* EMAIL */}
+        <form onSubmit={handleLogin} className="space-y-4">
 
           <input
             type="email"
@@ -81,8 +51,6 @@ function Login() {
             required
           />
 
-          {/* PASSWORD */}
-
           <input
             type="password"
             placeholder="Password"
@@ -91,8 +59,6 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-
-          {/* LOGIN BUTTON */}
 
           <button
             type="submit"

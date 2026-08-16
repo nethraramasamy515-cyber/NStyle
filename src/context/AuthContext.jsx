@@ -1,39 +1,106 @@
-import { createContext, useContext, useState, useEffect } from "react";
+
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
+import axios from "axios";
 
 const AuthContext = createContext();
+
+const API_URL =
+  "https://nstyle-backend.onrender.com/api/users";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
+
+    return savedUser
+      ? JSON.parse(savedUser)
+      : null;
   });
 
+  // ================= SAVE USER =================
+
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(user));
+    if (user) {
+      localStorage.setItem(
+        "user",
+        JSON.stringify(user)
+      );
+    } else {
+      localStorage.removeItem("user");
+    }
   }, [user]);
 
-  const register = (name, email, password) => {
-    const newUser = { name, email, password };
+  // ================= REGISTER =================
 
-    localStorage.setItem("registeredUser", JSON.stringify(newUser));
+  const register = async (
+    name,
+    email,
+    password
+  ) => {
+    try {
+      const res = await axios.post(
+        `${API_URL}/register`,
+        {
+          name,
+          email,
+          password,
+        }
+      );
 
-    setUser(newUser);
-  };
+      return {
+        success: true,
+        message: res.data.message,
+      };
+    } catch (error) {
+      console.log("Register Error:", error);
 
-  const login = (email, password) => {
-    const saved = JSON.parse(localStorage.getItem("registeredUser"));
-
-    if (
-      saved &&
-      saved.email === email &&
-      saved.password === password
-    ) {
-      setUser(saved);
-      return true;
+      return {
+        success: false,
+        message:
+          error.response?.data?.message ||
+          "Registration Failed",
+      };
     }
-
-    return false;
   };
+
+  // ================= LOGIN =================
+
+  const login = async (
+    email,
+    password
+  ) => {
+    try {
+      const res = await axios.post(
+        `${API_URL}/login`,
+        {
+          email,
+          password,
+        }
+      );
+
+      setUser(res.data.user);
+
+      return {
+        success: true,
+        message: res.data.message,
+      };
+    } catch (error) {
+      console.log("Login Error:", error);
+
+      return {
+        success: false,
+        message:
+          error.response?.data?.message ||
+          "Login Failed",
+      };
+    }
+  };
+
+  // ================= LOGOUT =================
 
   const logout = () => {
     setUser(null);

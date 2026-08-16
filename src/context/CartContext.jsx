@@ -8,13 +8,12 @@ import {
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  // Load cart from localStorage
+
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  // Save cart whenever it changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
@@ -22,6 +21,7 @@ export function CartProvider({ children }) {
   // Add Product
   const addToCart = (product) => {
     setCart((prevCart) => {
+
       const existing = prevCart.find(
         (item) => item.id === product.id
       );
@@ -29,12 +29,21 @@ export function CartProvider({ children }) {
       if (existing) {
         return prevCart.map((item) =>
           item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? {
+                ...item,
+                quantity: item.quantity + 1,
+              }
             : item
         );
       }
 
-      return [...prevCart, { ...product, quantity: 1 }];
+      return [
+        ...prevCart,
+        {
+          ...product,
+          quantity: 1,
+        },
+      ];
     });
   };
 
@@ -43,7 +52,10 @@ export function CartProvider({ children }) {
     setCart((prevCart) =>
       prevCart.map((item) =>
         item.id === id
-          ? { ...item, quantity: item.quantity + 1 }
+          ? {
+              ...item,
+              quantity: item.quantity + 1,
+            }
           : item
       )
     );
@@ -55,7 +67,10 @@ export function CartProvider({ children }) {
       prevCart
         .map((item) =>
           item.id === id
-            ? { ...item, quantity: item.quantity - 1 }
+            ? {
+                ...item,
+                quantity: item.quantity - 1,
+              }
             : item
         )
         .filter((item) => item.quantity > 0)
@@ -65,8 +80,16 @@ export function CartProvider({ children }) {
   // Remove Product
   const removeFromCart = (id) => {
     setCart((prevCart) =>
-      prevCart.filter((item) => item.id !== id)
+      prevCart.filter(
+        (item) => item.id !== id
+      )
     );
+  };
+
+  // Clear Cart
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("cart");
   };
 
   return (
@@ -77,6 +100,7 @@ export function CartProvider({ children }) {
         increaseQuantity,
         decreaseQuantity,
         removeFromCart,
+        clearCart,
       }}
     >
       {children}

@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+const API_URL = "https://nstyle-backend.onrender.com";
+
 function Users() {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // ================= LOAD USERS =================
 
   useEffect(() => {
     loadUsers();
@@ -10,61 +15,137 @@ function Users() {
 
   const loadUsers = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/users");
+      setLoading(true);
+
+      const res = await axios.get(
+        `${API_URL}/api/users`
+      );
+
       setUsers(res.data);
     } catch (err) {
-      console.log(err);
+      console.log("Users Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // ================= UI =================
+
   return (
-    <div className="max-w-6xl mx-auto py-10 px-6">
+    <div className="min-h-screen bg-gray-100 py-10 px-6">
 
-      <h1 className="text-4xl font-bold mb-8">
-        👥 Registered Users
-      </h1>
+      <div className="max-w-6xl mx-auto">
 
-      <div className="overflow-x-auto bg-white rounded-2xl shadow-xl">
+        <h1 className="text-4xl font-bold mb-8">
+          👥 Registered Users
+        </h1>
 
-        <table className="w-full">
+        {/* LOADING */}
 
-          <thead className="bg-black text-white">
+        {loading ? (
 
-            <tr>
-              <th className="p-4">ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Joined</th>
-            </tr>
+          <div className="bg-white rounded-2xl shadow-xl p-10 text-center">
 
-          </thead>
+            <p className="text-xl font-semibold">
+              Loading Users...
+            </p>
 
-          <tbody>
+          </div>
 
-            {users.map((user) => (
+        ) : users.length === 0 ? (
 
-              <tr
-                key={user.id}
-                className="border-b hover:bg-gray-100"
-              >
+          /* NO USERS */
 
-                <td className="p-4">{user.id}</td>
+          <div className="bg-white rounded-2xl shadow-xl p-10 text-center">
 
-                <td>{user.name}</td>
+            <div className="text-6xl mb-4">
+              👥
+            </div>
 
-                <td>{user.email}</td>
+            <h2 className="text-2xl font-bold">
+              No Users Found
+            </h2>
 
-                <td>
-                  {new Date(user.created_at).toLocaleDateString()}
-                </td>
+            <p className="text-gray-500 mt-2">
+              No registered users are available.
+            </p>
 
-              </tr>
+          </div>
 
-            ))}
+        ) : (
 
-          </tbody>
+          /* USERS TABLE */
 
-        </table>
+          <div className="overflow-x-auto bg-white rounded-2xl shadow-xl">
+
+            <table className="w-full">
+
+              <thead className="bg-black text-white">
+
+                <tr>
+
+                  <th className="p-4 text-left">
+                    ID
+                  </th>
+
+                  <th className="p-4 text-left">
+                    Name
+                  </th>
+
+                  <th className="p-4 text-left">
+                    Email
+                  </th>
+
+                  <th className="p-4 text-left">
+                    Joined
+                  </th>
+
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                {users.map((user) => (
+
+                  <tr
+                    key={user.id}
+                    className="border-b hover:bg-gray-100"
+                  >
+
+                    <td className="p-4 font-semibold">
+                      {user.id}
+                    </td>
+
+                    <td className="p-4">
+                      {user.name}
+                    </td>
+
+                    <td className="p-4">
+                      {user.email}
+                    </td>
+
+                    <td className="p-4">
+
+                      {user.created_at
+                        ? new Date(
+                            user.created_at
+                          ).toLocaleDateString()
+                        : "-"}
+
+                    </td>
+
+                  </tr>
+
+                ))}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        )}
 
       </div>
 

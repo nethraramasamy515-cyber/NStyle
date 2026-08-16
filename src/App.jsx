@@ -15,28 +15,45 @@ import AIChat from "./pages/AIChat";
 import Profile from "./pages/Profile";
 import Payment from "./pages/Payment";
 import TrackOrder from "./pages/TrackOrder";
+
 import Admin from "./pages/Admin";
 import AddProduct from "./pages/AddProduct";
 import ManageProducts from "./pages/ManageProducts";
 import EditProduct from "./pages/EditProduct";
 import AdminOrders from "./pages/AdminOrders";
-import ProtectedRoute from "./components/ProtectedRoute";
 import Users from "./pages/Users";
+
+import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
+
 function App() {
   return (
     <Routes>
 
-      {/* Public Routes */}
+      {/* ================= PUBLIC ROUTES ================= */}
+
       <Route path="/" element={<Home />} />
       <Route path="/shop" element={<Shop />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      
-      <Route path="/product/:id" element={<ProductDetails />} />
-      <Route path="/ai-stylist" element={<AIStylist />} />
-      <Route path="/ai" element={<AIChat />} />
 
-      {/* Protected Routes */}
+      <Route
+        path="/product/:id"
+        element={<ProductDetails />}
+      />
+
+      <Route
+        path="/ai-stylist"
+        element={<AIStylist />}
+      />
+
+      <Route
+        path="/ai"
+        element={<AIChat />}
+      />
+
+      {/* ================= PROTECTED USER ROUTES ================= */}
+
       <Route
         path="/cart"
         element={
@@ -109,25 +126,63 @@ function App() {
         }
       />
 
-      {/* Admin Routes */}
-      <Route path="/admin" element={<Admin />} />
-      <Route path="/admin/add-product" element={<AddProduct />} />
-      <Route path="/admin/products" element={<ManageProducts />} />
+      {/* ================= ADMIN ROUTES ================= */}
+
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <Admin />
+          </AdminRoute>
+        }
+      />
+
+      <Route
+        path="/admin/add-product"
+        element={
+          <AdminRoute>
+            <AddProduct />
+          </AdminRoute>
+        }
+      />
+
+      <Route
+        path="/admin/products"
+        element={
+          <AdminRoute>
+            <ManageProducts />
+          </AdminRoute>
+        }
+      />
+
       <Route
         path="/admin/edit-product/:id"
-        element={<EditProduct />}
+        element={
+          <AdminRoute>
+            <EditProduct />
+          </AdminRoute>
+        }
       />
-<Route
-  path="/admin/orders"
-  element={<AdminOrders />}
-/>
 
-<Route
-  path="/admin/users"
-  element={<Users />}
-/>
+      <Route
+        path="/admin/orders"
+        element={
+          <AdminRoute>
+            <AdminOrders />
+          </AdminRoute>
+        }
+      />
+
+      <Route
+        path="/admin/users"
+        element={
+          <AdminRoute>
+            <Users />
+          </AdminRoute>
+        }
+      />
+
     </Routes>
-    
   );
 }
 

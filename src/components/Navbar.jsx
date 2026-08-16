@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import {
   FiShoppingCart,
@@ -15,6 +14,9 @@ function Navbar() {
   const { cart } = useCart();
   const { wishlist } = useWishlist();
   const { user, logout } = useAuth();
+
+  const isAdmin =
+    user?.email === "nethraramasamy515@gmail.com";
 
   return (
     <nav className="bg-white shadow-md px-6 py-4 flex items-center justify-between gap-6">
@@ -62,7 +64,6 @@ function Navbar() {
           </Link>
         </li>
 
-
         {user && (
           <li>
             <Link
@@ -74,6 +75,19 @@ function Navbar() {
           </li>
         )}
 
+        {/* ADMIN */}
+        {isAdmin && (
+          <li>
+            <Link
+              to="/admin"
+              className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition"
+            >
+              👑 Admin
+            </Link>
+          </li>
+        )}
+
+        {/* AI */}
         <li>
           <Link
             to="/ai"
@@ -170,4 +184,3 @@ function Navbar() {
 }
 
 export default Navbar;
-
